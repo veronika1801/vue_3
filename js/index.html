@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kandan</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <script defer src="../js/vue.js"></script>
+    <script defer src="../js/main.js"></script>
+</head>
+<body>
+    <div id="app">
+        <kandan>
+
+        </kandan>
+        <div class="kandan">
+            <form class="form">
+                <input type="text" placeholder="название">
+                <input type="text" placeholder="описание">
+                <input type="date"  name="start">
+                <input class="but" type="submit" value="СОЗДАТЬ">
+            </form>
+            <div class="cols">
+                <div class="col">
+                    <h3>запланированные задачи</h3>
+                    <div>
+                        <card></card>
+                    </div>
+                </div>
+                <div class="col">
+                    <h3>задачи в работе</h3>
+                    <div>
+                        <card></card>
+                    </div>
+                </div>
+                <div class="col">
+                    <h3>тестирование</h3>
+                    <div>
+                        <card></card>
+                    </div>
+                </div>
+                <div class="col">
+                    <h3>выполенные задачи</h3>
+                    <div>
+                        <card></card>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

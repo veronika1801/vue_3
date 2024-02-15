@@ -1,0 +1,50 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 20px;
+    height: 200px;
+    margin-top: 35px;
+    gap: 20px;
+    
+}
+body{
+    background-color: rgb(246, 220, 224);
+}
+input{
+    height: 25px;
+}
+.but{
+    background-color: rgb(255, 199, 208);
+    border: none;
+    border-radius: 20px;
+
+}
+.cols{
+    display: flex;
+    flex-direction: row;
+    
+}
+.col{
+    background-color: white;
+    width: 300px;
+    min-height: 500px;
+    border-radius: 20px;
+    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+    
+}
+.kandan{
+    display: flex;
+    flex-direction: row;
+}
+h3{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    color: rgb(64, 64, 64);
+}
