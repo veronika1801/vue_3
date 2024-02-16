@@ -90,7 +90,7 @@ Vue.component('col3', {
                 <div class="btns">
                     <button class="edit" @click="edit(card)">Редактировать</button>
                     <button class="next" @click="next(card)">переместить вперед</button>
-                    <button  @click="returnCard(card)">переместить назад</button>
+                    <button  @click="returnCard(card)" class="btr">переместить назад</button>
                     
                 </div>
             </div>
