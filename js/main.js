@@ -48,7 +48,7 @@ Vue.component('col1', {
                             <div>
                                 <button class="del" @click="del(card)">Удалить</button>
                                 <button class="edit" @click="edit(card)">Редактировать</button>
-                                <button class="next">переместить вперед</button>
+                                <button class="next" @click="next(card)">переместить вперед</button>
                             </div>
                         </div>
                     </div>
@@ -62,10 +62,14 @@ Vue.component('col1', {
     },
     methods: {
        del(card){
-            this.oneColList.splice(this.oneColList.indexOf(card));
+            this.oneColList.splice(this.oneColList.indexOf(card), 1);
        },
        edit(card){
             card.edit=true
+       },
+       next(card){
+            eventBus.$emit('takeFromOne', card);
+            this.oneColList.splice(this.oneColList.indexOf(card), 1);
        },
        savingChanges(card){
             card.edit=false
