@@ -29,17 +29,25 @@ Vue.component('col1', {
         <div class="col">
             <h3>запланированные задачи</h3>
             <div>
-                <div v-for="card in firstColList" class="col_item">
-                    <div>
+                <div v-for="card in oneColList" class="col_item">
+                    <div class="edit_form" v-if="card.edit" >
+                        <label for="list_name" class="title">название: </label>
+                        <input type="text" id="list_name" v-model="card.list_name" >
+                        <label for="cardDiscription" class="title">Описание: </label>
+                        <input type="text" id="cardDiscription" v-model="card.cardDiscription">
+                        <label for="deadLine" class="title">Дэдлайн: </label>
+                        <input type="date" id="deadLine" v-model="card.deadLine">
+                        <input type="submit" @click="savingChanges(card)" class="btn">
+                    </div>  
+                    <div v-else>
                         <p><b>название:</b> {{ card.list_name}} </p>
                         <p><b>описание:</b> {{ card.cardDiscription }}</p>
                         <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
+                        <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
                         <div class="btns">
                             <div>
                                 <button class="del" @click="del(card)">Удалить</button>
-                                <button class="edit" >Редактировать</button>
-                            </div>
-                            <div>
+                                <button class="edit" @click="edit(card)">Редактировать</button>
                                 <button class="next">переместить вперед</button>
                             </div>
                         </div>
@@ -49,20 +57,28 @@ Vue.component('col1', {
         </div>
     `, data () {
         return {
-            firstColList: [],
+            oneColList: [],
         }
     },
     methods: {
        del(card){
-            this.firstColList.splice(this.firstColList.indexOf(card));
+            this.oneColList.splice(this.oneColList.indexOf(card));
+       },
+       edit(card){
+            card.edit=true
+       },
+       savingChanges(card){
+            card.edit=false
+            card.edited = new Date();
        }
     },
     mounted() {
         eventBus.$on('CreateCardList', list => {
-            this.firstColList.push(list);
+            this.oneColList.push(list);
         })
         
-    }
+    },
+  
 })
 
 Vue.component('createCard', {
@@ -80,7 +96,8 @@ Vue.component('createCard', {
         return {
             list_name: null,
             cardDiscription: null,
-            deadline: null
+            deadline: null,
+            
         }
     },
     methods: {
@@ -89,12 +106,17 @@ Vue.component('createCard', {
                 list_name: this.list_name,
                 cardDiscription: this.cardDiscription,
                 deadLine: new Date(this.deadline),
+                edit:false,
+                edited:null
             }
             eventBus.$emit('CreateCardList', cardList);
             this.list_name = this.deadline = this.cardDiscription = null;
         }
-    }
+    },
+    
+
 })
+
 
 
 let app = new Vue({
