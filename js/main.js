@@ -39,6 +39,12 @@ Vue.component('col3', {
                 <input type="date" id="deadLine" v-model="card.deadLine">
                 <input type="submit" @click="savingChanges(card)" class="btn">
             </div>  
+            <div v-else>
+            <div v-if='show' class="reasonForReturn">
+                            <label class="title" for="reason">Причина возврата: </label>
+                            <input type="text" id="reason" v-model="reason" >
+                            <button @click="back(card)" class="btn">Вернуть</button>
+                         </div>
             
             <div v-else>
                 <p><b>название:</b> {{ card.list_name}} </p>
@@ -48,17 +54,18 @@ Vue.component('col3', {
                 <div class="btns">
                         <button class="edit" @click="edit(card)">Редактировать</button>
                         <button class="next" @click="next(card)">переместить вперед</button>
-                        <button class="back" @click="back(card)">переместить назад</button>
+                        <button  @click="returnCard(card)">переместить назад</button>
                     
                 </div>
             </div>
-           
+            </div>
         </div>
     </div>
 </div>
     `, data(){
         return{
             threeColList: [],
+            show: false,
             reason: null,
         }
        
@@ -80,7 +87,18 @@ Vue.component('col3', {
             eventBus.$emit('takeBackThree', card);
             this.threeColList.splice(this.threeColList.indexOf(card), 1);
         },
-        
+        returnCard(card) {
+            card.returned = true;
+            this.show = true;
+            
+        },
+        back(card){
+            card.reasonForReturn.push(this.reason);
+            this.reason = null;
+            eventBus.$emit('takeBackThree', card);
+            this.threeColList.splice(this.threeColList.indexOf(card), 1);
+            this.show = false;
+        }
         
     },
     mounted(){
@@ -108,6 +126,9 @@ Vue.component('col2', {
             <div v-else>
                 <p><b>название:</b> {{ card.list_name}} </p>
                 <p><b>описание:</b> {{ card.cardDiscription }}</p>
+                <p v-if="card.reasonForReturn!=0" class="title">Причина возврата:</p>
+                <p v-if="card.reasonForReturn!=0" v-for="reason in card.reasonForReturn">{{ reason }}</p>
+                             
                 <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
                 <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
                 <div class="btns">
@@ -122,7 +143,8 @@ Vue.component('col2', {
 </div>
     `, data() {
         return {
-            twoColList: []
+            twoColList: [],
+            show: false,
         }
 
     },
@@ -239,6 +261,9 @@ Vue.component('createCard', {
                 deadLine: new Date(this.deadline),
                 edit: false,
                 edited: null,
+                reasonForReturn: [],
+                returned: false,
+
             
             }
             eventBus.$emit('CreateCardList', cardList);
