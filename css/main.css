@@ -48,3 +48,6 @@ h3{
     padding-top: 10px;
     color: rgb(64, 64, 64);
 }
+.col_item{
+    background-color: aqua;
+}
