@@ -24,6 +24,72 @@ Vue.component('kandan', {
 
     }
 })
+Vue.component('col3', {
+    template:`
+    <div class="col">
+    <h3>тестирование</h3>
+    <div>
+        <div v-for="card in threeColList" class="col_item">
+            <div class="edit_form" v-if="card.edit" >
+                <label for="list_name" class="title">название: </label>
+                <input type="text" id="list_name" v-model="card.list_name" >
+                <label for="cardDiscription" class="title">Описание: </label>
+                <input type="text" id="cardDiscription" v-model="card.cardDiscription">
+                <label for="deadLine" class="title">Дэдлайн: </label>
+                <input type="date" id="deadLine" v-model="card.deadLine">
+                <input type="submit" @click="savingChanges(card)" class="btn">
+            </div>  
+            
+            <div v-else>
+                <p><b>название:</b> {{ card.list_name}} </p>
+                <p><b>описание:</b> {{ card.cardDiscription }}</p>
+                <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
+                <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
+                <div class="btns">
+                        <button class="edit" @click="edit(card)">Редактировать</button>
+                        <button class="next" @click="next(card)">переместить вперед</button>
+                        <button class="back" @click="back(card)">переместить назад</button>
+                    
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+    `, data(){
+        return{
+            threeColList: [],
+            reason: null,
+        }
+       
+    },
+    methods:{
+        edit(card) {
+            card.edit = true
+        },
+        savingChanges(card) {
+            card.edit = false
+            card.edited = new Date();
+        
+        },
+        next(card) {
+            eventBus.$emit('takeFromThree', card);
+            this.twoColList.splice(this.twoColList.indexOf(card), 1);
+        },
+        back(card){
+            eventBus.$emit('takeBackThree', card);
+            this.threeColList.splice(this.threeColList.indexOf(card), 1);
+        },
+        
+        
+    },
+    mounted(){
+        eventBus.$on('takeFromTwo', card => {
+            this.threeColList.push(card);
+        })
+        
+    }
+})
 Vue.component('col2', {
     template: `
     <div class="col">
@@ -77,6 +143,9 @@ Vue.component('col2', {
     },
     mounted(){
         eventBus.$on('takeFromOne', card => {
+            this.twoColList.push(card);
+        })
+        eventBus.$on('takeBackThree', card => {
             this.twoColList.push(card);
         })
     }
@@ -169,7 +238,8 @@ Vue.component('createCard', {
                 cardDiscription: this.cardDiscription,
                 deadLine: new Date(this.deadline),
                 edit: false,
-                edited: null
+                edited: null,
+            
             }
             eventBus.$emit('CreateCardList', cardList);
             this.list_name = this.deadline = this.cardDiscription = null;
