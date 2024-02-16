@@ -34,8 +34,8 @@ Vue.component('col4', {
                 <p><b>описание:</b> {{ card.cardDiscription }}</p>
                 <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
                 <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
-                <p v-if="card.doneStatus" class="deadline-true">Сроки соблюдены</p>
-                <p v-else class="deadline-false ">Дедлайн просрочен</p>
+                <h4 v-if="card.doneStatus" class="deadline-true">Сроки соблюдены</h4>
+                <h4 v-else class="deadline-false ">Дедлайн просрочен</h4>
             </div>
         </div>
     </div>
@@ -49,13 +49,14 @@ Vue.component('col4', {
     },
     mounted(){
         eventBus.$on('takeFromThree', card => {
+            this.fourColList.push(card);
             card.doneDate = new Date();
 
             if (card.deadLine >= card.doneDate){
                 card.doneStatus = true
             } 
             else card.doneStatus = false;
-            this.fourColList.push(card);
+            
         })
     }
 })
@@ -116,7 +117,7 @@ Vue.component('col3', {
         },
         next(card) {
             eventBus.$emit('takeFromThree', card);
-            this.twoColList.splice(this.twoColList.indexOf(card), 1);
+            this.threeColList.splice(this.threeColList.indexOf(card), 1);
         },
         
         returnCard(card) {
@@ -158,9 +159,7 @@ Vue.component('col2', {
             <div v-else>
                 <p><b>название:</b> {{ card.list_name}} </p>
                 <p><b>описание:</b> {{ card.cardDiscription }}</p>
-                <p v-if="card.reasonForReturn!=0" class="title" v-for="reason in card.reasonForReturn"><b>Причина возврата: </b>{{ reason }}</p>
-                
-                             
+                <p v-if="card.reasonForReturn!=0" class="title" v-for="reason in card.reasonForReturn"><b>Причина возврата: </b>{{ reason }}</p>                
                 <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
                 <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
                 <div class="btns">
