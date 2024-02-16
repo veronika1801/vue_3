@@ -36,7 +36,7 @@ Vue.component('col1', {
                         <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
                         <div class="btns">
                             <div>
-                                <button class="del" >Удалить</button>
+                                <button class="del" @click="del(card)">Удалить</button>
                                 <button class="edit" >Редактировать</button>
                             </div>
                             <div>
@@ -53,7 +53,9 @@ Vue.component('col1', {
         }
     },
     methods: {
-       
+       del(card){
+            this.firstColList.splice(this.firstColList.indexOf(card));
+       }
     },
     mounted() {
         eventBus.$on('CreateCardList', list => {
