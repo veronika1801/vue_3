@@ -24,6 +24,41 @@ Vue.component('kandan', {
 
     }
 })
+Vue.component('col4', {
+    template:`
+    <div class="col">
+    <h3>выполненные задачи</h3>
+        <div>
+            <div v-for="card in fourColList" class="col_item">
+                <p><b>название:</b> {{ card.list_name}} </p>
+                <p><b>описание:</b> {{ card.cardDiscription }}</p>
+                <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
+                <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
+                <p v-if="card.doneStatus" class="deadline-true">Сроки соблюдены</p>
+                <p v-else class="deadline-false ">Дедлайн просрочен</p>
+            </div>
+        </div>
+    </div>
+    `, data(){
+        return{
+            fourColList:[]
+        }
+    },
+    methods:{
+      
+    },
+    mounted(){
+        eventBus.$on('takeFromThree', card => {
+            card.doneDate = new Date();
+
+            if (card.deadLine >= card.doneDate){
+                card.doneStatus = true
+            } 
+            else card.doneStatus = false;
+            this.fourColList.push(card);
+        })
+    }
+})
 Vue.component('col3', {
     template:`
     <div class="col">
@@ -41,10 +76,10 @@ Vue.component('col3', {
             </div>  
             <div v-else>
             <div v-if='show' class="reasonForReturn">
-                            <label class="title" for="reason">Причина возврата: </label>
-                            <input type="text" id="reason" v-model="reason" >
-                            <button @click="back(card)" class="btn">Вернуть</button>
-                         </div>
+                <label class="title" for="reason">Причина возврата: </label>
+                <input type="text" id="reason" v-model="reason" >
+                <button @click="back(card)" class="btn">Вернуть</button>
+            </div>
             
             <div v-else>
                 <p><b>название:</b> {{ card.list_name}} </p>
@@ -52,9 +87,9 @@ Vue.component('col3', {
                 <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
                 <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
                 <div class="btns">
-                        <button class="edit" @click="edit(card)">Редактировать</button>
-                        <button class="next" @click="next(card)">переместить вперед</button>
-                        <button  @click="returnCard(card)">переместить назад</button>
+                    <button class="edit" @click="edit(card)">Редактировать</button>
+                    <button class="next" @click="next(card)">переместить вперед</button>
+                    <button  @click="returnCard(card)">переместить назад</button>
                     
                 </div>
             </div>
@@ -83,10 +118,7 @@ Vue.component('col3', {
             eventBus.$emit('takeFromThree', card);
             this.twoColList.splice(this.twoColList.indexOf(card), 1);
         },
-        back(card){
-            eventBus.$emit('takeBackThree', card);
-            this.threeColList.splice(this.threeColList.indexOf(card), 1);
-        },
+        
         returnCard(card) {
             card.returned = true;
             this.show = true;
@@ -126,8 +158,8 @@ Vue.component('col2', {
             <div v-else>
                 <p><b>название:</b> {{ card.list_name}} </p>
                 <p><b>описание:</b> {{ card.cardDiscription }}</p>
-                <p v-if="card.reasonForReturn!=0" class="title">Причина возврата:</p>
-                <p v-if="card.reasonForReturn!=0" v-for="reason in card.reasonForReturn">{{ reason }}</p>
+                <p v-if="card.reasonForReturn!=0" class="title" v-for="reason in card.reasonForReturn"><b>Причина возврата: </b>{{ reason }}</p>
+                
                              
                 <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
                 <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
@@ -263,7 +295,8 @@ Vue.component('createCard', {
                 edited: null,
                 reasonForReturn: [],
                 returned: false,
-
+                doneStatus: null,
+                doneDate: null,
             
             }
             eventBus.$emit('CreateCardList', cardList);
