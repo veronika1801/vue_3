@@ -24,6 +24,63 @@ Vue.component('kandan', {
 
     }
 })
+Vue.component('col2', {
+    template: `
+    <div class="col">
+    <h3>в работе</h3>
+    <div>
+        <div v-for="card in twoColList" class="col_item">
+            <div class="edit_form" v-if="card.edit" >
+                <label for="list_name" class="title">название: </label>
+                <input type="text" id="list_name" v-model="card.list_name" >
+                <label for="cardDiscription" class="title">Описание: </label>
+                <input type="text" id="cardDiscription" v-model="card.cardDiscription">
+                <label for="deadLine" class="title">Дэдлайн: </label>
+                <input type="date" id="deadLine" v-model="card.deadLine">
+                <input type="submit" @click="savingChanges(card)" class="btn">
+            </div>  
+            <div v-else>
+                <p><b>название:</b> {{ card.list_name}} </p>
+                <p><b>описание:</b> {{ card.cardDiscription }}</p>
+                <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
+                <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
+                <div class="btns">
+                        <button class="edit" @click="edit(card)">Редактировать</button>
+                        <button class="next" @click="next(card)">переместить вперед</button>
+                        
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    `, data() {
+        return {
+            twoColList: []
+        }
+
+    },
+    methods: {
+        edit(card) {
+            card.edit = true
+        },
+        savingChanges(card) {
+            card.edit = false
+            card.edited = new Date();
+        
+        },
+        next(card) {
+            eventBus.$emit('takeFromTwo', card);
+            this.twoColList.splice(this.twoColList.indexOf(card), 1);
+        }
+        
+    },
+    mounted(){
+        eventBus.$on('takeFromOne', card => {
+            this.twoColList.push(card);
+        })
+    }
+})
 Vue.component('col1', {
     template: `
         <div class="col">
@@ -45,44 +102,45 @@ Vue.component('col1', {
                         <p><b>дэдлайн:</b>{{ card.deadLine }}</p>
                         <p v-if="card.edited"><b>Последнее редактирование:</b> {{ card.edited }}</p>
                         <div class="btns">
-                            <div>
+                            
                                 <button class="del" @click="del(card)">Удалить</button>
                                 <button class="edit" @click="edit(card)">Редактировать</button>
                                 <button class="next" @click="next(card)">переместить вперед</button>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    `, data () {
+    `, data() {
         return {
             oneColList: [],
         }
     },
     methods: {
-       del(card){
+        del(card) {
             this.oneColList.splice(this.oneColList.indexOf(card), 1);
-       },
-       edit(card){
-            card.edit=true
-       },
-       next(card){
+        },
+        edit(card) {
+            card.edit = true
+        },
+        next(card) {
             eventBus.$emit('takeFromOne', card);
             this.oneColList.splice(this.oneColList.indexOf(card), 1);
-       },
-       savingChanges(card){
-            card.edit=false
+        },
+        savingChanges(card) {
+            card.edit = false
             card.edited = new Date();
-       }
+        }
     },
     mounted() {
         eventBus.$on('CreateCardList', list => {
             this.oneColList.push(list);
         })
-        
+      
+
     },
-  
+
 })
 
 Vue.component('createCard', {
@@ -101,7 +159,7 @@ Vue.component('createCard', {
             list_name: null,
             cardDiscription: null,
             deadline: null,
-            
+
         }
     },
     methods: {
@@ -110,14 +168,14 @@ Vue.component('createCard', {
                 list_name: this.list_name,
                 cardDiscription: this.cardDiscription,
                 deadLine: new Date(this.deadline),
-                edit:false,
-                edited:null
+                edit: false,
+                edited: null
             }
             eventBus.$emit('CreateCardList', cardList);
             this.list_name = this.deadline = this.cardDiscription = null;
         }
     },
-    
+
 
 })
 

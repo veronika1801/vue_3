@@ -15,6 +15,8 @@ body{
 }
 input{
     height: 25px;
+    border-radius: 7px;
+    border: 1px solid black;
 }
 .but{
     background-color: rgb(255, 199, 208);
@@ -29,7 +31,7 @@ input{
 }
 .col{
     background-color: white;
-    width: 300px;
+    width: 350px;
     min-height: 500px;
     border-radius: 20px;
     margin-left: 40px;
@@ -49,5 +51,41 @@ h3{
     color: rgb(64, 64, 64);
 }
 .col_item{
-    background-color: aqua;
+    background-color: rgb(247, 247, 247);
+    display: flex;
+    flex-direction: column;
+    margin-left: 25px;
+    border-radius: 20px;
+    padding: 20px;
+    user-select: none;
+    color: rgb(64, 64, 64);
+    margin-top: 20px;
+    width: 250px;
+}
+.btns{
+    display: flex;
+    flex-direction: column;
+    margin-left: 75px;
+    width: 100px;
+    gap: 10px;
+    
+}
+button{
+    border: none;
+}
+.del{
+    background-color: rgb(253, 115, 115);
+    border-radius: 20px;
+}
+.edit{
+
+}
+.next{
+
+}
+.edit_form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 10px;
 }
